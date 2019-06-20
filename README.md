@@ -2,43 +2,37 @@
 Yet Another Chat
 
 
-Must have the following:
-* login(could be just pick nickname or full signup process)
+Must have the following features:
+* login (could be just login by nickname or full signup process your choice)
+* like IRC on one chat room
 * cant be 2 people with same nickname
 * chat room with the whole history
 * an input to type messages
 * message must be appended to the chat of all participants
-* messages must show the sender
-* Bot youtube or giphy:
-  * Giphy:
-    * search gif and show it.
-  * Youtbe
-    * that search on youtube(using api) with format:
-    * /youtube song_name/artist
-    * must place a youtube embed player with first result
- 
+* messages must show the sender and time
+* Integrage the text input with a Youtube Bot. The goal is to type a message inside text input with the followling format:
+    * text format: `/youtube song_name/artist`
+      * must query youtube search api with `song_name/artist` 
+      * take the first value of the search
+      * append a message to the chat room with embed youtube player with first value
   
-Front end, could be build:
-* JS:
+
+## Front end, use this stack:
+* Javascript:
   * React
   * redux
-  * Vue
-  * Angular
-  * Ember
-  * Backbone
   
-* HTML/CSS bootstrap
+* HTML/CSS material
 
-Backend:
+## Backend, use this stack:
 * Applicacion:  
   * Python - Bonus
   * Node
-  * Ruby 
+  * firebase or similar
 
-Platform:
+## Platform:
 * Run on heroku free plan, or whereever you like but reachable from anywhere.
 
-BTW we like react, redux, Backbone, python 
 
 # To apply for a job just... 
 
