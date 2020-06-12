@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
+import { connect } from 'react-redux';
+import * as routes from './constants/routes';
+import LandingPage from './components/pages/landing';
+import Login from './components/pages/login';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <Router>
+    <Route exact path="/" component={LandingPage} />
+    <Route exact path={routes.LANDING} component={LandingPage} />
+    <Route exact path={routes.LOGIN} component={Login} />
+    <Route exact path={routes.LANDING} component={LandingPage} />
+  </Router>
+);
 
-export default App;
+const mapStateToProps = (state) => ({
+  user: state.userState.user,
+});
+
+export default connect(mapStateToProps)(App);
