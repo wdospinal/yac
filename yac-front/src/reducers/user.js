@@ -1,7 +1,11 @@
 import * as actions from '../constants/actions';
 
 const INITIAL_STATE = {
-  user: {},
+  user: {
+    userId: '01',
+    username: 'wdospinal',
+    lastLogin: 1592006913231,
+  },
 };
 
 function userReducer(state = INITIAL_STATE, action) {

@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../../constants/actions';
+import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import { GET_USER, SIGN_IN } from '../../../constants/actions';
 
 class Login extends React.Component {
   componentDidUpdate(prevProps) {
@@ -13,39 +18,21 @@ class Login extends React.Component {
   render() {
     const { signInWithGoogle } = this.props;
     return (
-      <div className="bg-gradient-primary">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-9 col-lg-12 col-xl-10">
-              <div className="card shadow-lg o-hidden border-0 my-5">
-                <div className="card-body p-0">
-                  <div className="row">
-                    <div className="col-lg-6 d-none d-lg-flex">
-                      <div className="flex-grow-1 bg-login-image" />
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="p-5">
-                        <div className="text-center">
-                          <h4 className="text-dark mb-4">Bienvenido</h4>
-                        </div>
-                        <form className="user">
-                          <div onClick={() => signInWithGoogle()} role="button">
-                            <div className="btn btn-primary btn-block text-white btn-google btn-user" role="button">
-                              <i className="fab fa-google" />
-&nbsp; Login with Google
-                            </div>
-                          </div>
-                        </form>
-                        <div className="text-center" />
-                        <div className="text-center" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div>
+        <List>
+          <ListItem button onClick={() => signInWithGoogle()}>
+            <ListItemAvatar>
+              <Avatar style={{ backgroundColor: '#eee' }}>
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                  height="30"
+                  alt="G"
+                />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Sign in with Google" />
+          </ListItem>
+        </List>
       </div>
     );
   }
@@ -56,8 +43,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getUser: (user) => dispatch({ type: actions.GET_USER, user }),
-  signInWithGoogle: () => dispatch({ type: actions.SIGN_IN }),
+  getUser: (user) => dispatch({ type: GET_USER, user }),
+  signInWithGoogle: () => dispatch({ type: SIGN_IN }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

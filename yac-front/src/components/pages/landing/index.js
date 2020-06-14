@@ -3,7 +3,7 @@ import Navigation from '../../commons/navigation';
 
 const LandingPage = () => (
   <div id="page-top">
-    <Navigation />
+    <Navigation title="Landing" />
     <div className="wrapper row">
       <div className="d-flex flex-column" id="content-wrapper" />
       <div id="wrapper">

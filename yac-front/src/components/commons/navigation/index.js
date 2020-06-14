@@ -4,6 +4,7 @@ import { Menu } from '@material-ui/icons';
 import {
   AppBar, Toolbar, Typography, Button, IconButton,
 } from '@material-ui/core';
+import { CHATROOM, LOGIN } from '../../../constants/routes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function Navigation({ title }) {
   const classes = useStyles();
 
   return (
@@ -28,9 +29,10 @@ export default function ButtonAppBar() {
             <Menu />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            News
+            {title}
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href={CHATROOM}>Chatroom</Button>
+          <Button color="inherit" href={LOGIN}>Login</Button>
         </Toolbar>
       </AppBar>
     </div>
