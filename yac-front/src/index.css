@@ -55,8 +55,6 @@ body {
 /* === CONVERSATIONS === */
 
 .discussions {
-  display: flex;
-  flex: 1;
   width: 35%;
   height: 700px;
   box-shadow: 0px 8px 10px rgba(0,0,0,0.20);
@@ -180,8 +178,6 @@ body {
 }
 
 .chat {
-  display: flex;
-  flex: 1;
   width: calc(65% - 85px);
 }
 
@@ -213,6 +209,7 @@ body {
 }
 
 .chat .messages-chat {
+  height: 68%;
   padding: 25px 35px;
 }
 
@@ -268,11 +265,10 @@ body {
 }
 
 .footer-chat {
-  width: calc(65% - 66px);
+  width: 100%;
   height: 80px;
   display:flex;
   align-items: center;
-  position:absolute;
   bottom: 0;
   background-color: transparent;
   border-top: 2px solid #EEE;
@@ -310,7 +306,7 @@ body {
 
 .write-message {
   border:none !important;
-  width:60%;
+  width:90%;
   height: 50px;
   margin-left: 20px;
   padding: 10px;
