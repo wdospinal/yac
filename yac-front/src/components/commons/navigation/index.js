@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  color: {
+    background: 'linear-gradient(0.25turn, #4768b5, #35488e)',
+  },
 }));
 
 export default function Navigation({ title }) {
@@ -23,7 +26,7 @@ export default function Navigation({ title }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.color}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <Menu />

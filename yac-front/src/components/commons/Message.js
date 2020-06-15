@@ -1,7 +1,8 @@
 import React from 'react';
-import { Container } from '@material-ui/core';
+import Youtube from 'react-youtube';
 import MessageImage from './MessageImage';
 
+const USERNAME_CHAR_LIMIT = 9;
 const styles = {
   container: {
     flex: 1,
@@ -21,14 +22,60 @@ const styles = {
     flex: 1,
     color: 'grey',
   },
+  row: {
+    flexDirection: 'row',
+  },
+  userName: {
+    fontSize: 12,
+    marginTop: 5,
+  },
+  time: {
+    fontSize: '10px',
+    color: 'lightgrey',
+    marginBottom: '10px',
+    marginLeft: '85px',
+  },
 };
 
-const Message = ({ message: { body, time, username } }) => (
-  <Container fixed style={styles.container}>
-    <div style={styles.channelList}><MessageImage username={username} /></div>
-    <div style={styles.chat}>{body}</div>
-    <div style={styles.settings}>{new Date(time).toDateString()}</div>
-  </Container>
-);
+const formatTime = (time) => `${new Date(time).getHours()}h${new Date(time).getMinutes()}`;
 
+const generateUsername = (userName) => {
+  const newUsername = userName.slice(0, USERNAME_CHAR_LIMIT);
+  if (userName.length > USERNAME_CHAR_LIMIT) return newUsername.trim().concat('...');
+  return newUsername;
+};
+
+const Message = ({
+  message: {
+    body, time, username, fromYou, youtube,
+  },
+}) => (
+  <div>
+    {!fromYou
+      ? (
+        <div>
+          <div className="message">
+            <MessageImage username={username} />
+            <p className="text">{body}</p>
+          </div>
+          {youtube && <Youtube videoId={youtube} opts={{ width: 400, height: 250 }} /> }
+          <div style={styles.row}>
+            <div style={styles.userName}>{generateUsername(username)}</div>
+            <p className="time">{formatTime(time)}</p>
+          </div>
+        </div>
+      )
+      : (
+        <div>
+          <div className="message text-only">
+            <div className="response">
+              <p className="text">{body}</p>
+            </div>
+          </div>
+          {youtube && <Youtube videoId={youtube} opts={{ width: 400, height: 250 }} /> }
+          <p className="time-self">{formatTime(time)}</p>
+        </div>
+      )}
+  </div>
+);
 export default Message;
