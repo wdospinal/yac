@@ -125,7 +125,7 @@ const SignUp = ({
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I'have read terms and conditions"
+                label="I have read terms and conditions"
                 value={terms}
                 onChange={(e) => changeUserUpdate('terms', e.target.value)}
               />
