@@ -11,9 +11,24 @@ function* fetchUser(action) {
     const params = {
       ...action.data,
     };
-    const { data } = yield Axios.post(`${URL}${USER}`, params);
-    yield put({ type: actions.USER_FETCH_SUCCEEDED, data });
-    yield put({ type: actions.CURRENT_USER, data });
+    const sol = yield Axios.post(`${URL}${USER}`, params);
+    if (sol.data) {
+      yield put({ type: actions.USER_FETCH_SUCCEEDED, data: sol.data });
+      yield put({ type: actions.CURRENT_USER, data: sol.data });
+    } else if (firebase.auth().currentUser) {
+      console.log(firebase.auth());
+      const {
+        uid: userUid, email, displayName, photoURL: image,
+      } = firebase.auth().currentUser;
+      const [firstName, lastName] = displayName.split(' ');
+      const [username] = email.split('@');
+      yield put({
+        type: actions.CREATE_USER_DB,
+        data: {
+          userUid, email, firstName, lastName, image, username,
+        },
+      });
+    }
   } catch (e) {
     console.log(e);
     yield put({ type: actions.USER_FETCH_FAILED, message: e.message });
@@ -22,13 +37,13 @@ function* fetchUser(action) {
 
 function* createUserDB({
   data: {
-    userUid, email, firstName, lastName, image,
+    userUid, email, firstName, lastName, image, username,
   },
 }) {
   console.log('createUserDB');
   try {
     const body = {
-      userUid, firstName, lastName, email, image,
+      userUid, firstName, lastName, email, image, username,
     };
     const response = yield Axios.post(`${URL}${USER}`, body);
     yield put({
@@ -43,7 +58,7 @@ function* createUserDB({
 
 export function* createUserWithEmailAndPassword({
   data: {
-    email, password, firstName, lastName, image,
+    email, password, firstName, lastName, image, username,
   },
 }) {
   console.log('createUserWithEmailAndPassword');
@@ -54,7 +69,7 @@ export function* createUserWithEmailAndPassword({
       yield put({
         type: actions.CREATE_USER_DB,
         data: {
-          email, password, firstName, lastName, image, userUid,
+          email, password, firstName, lastName, image, userUid, username,
         },
       });
     }
@@ -166,6 +181,7 @@ export function* postMessage({
       channel: openChannel,
     };
     const result = yield Axios.post(`${URL}${MESSAGE}`, body);
+    console.log(result);
     yield put({ type: actions.POST_MESSAGE_SUCCEEDED, result });
   } catch (e) {
     yield put({ type: actions.POST_MESSAGE_FAILED, message: e.message });

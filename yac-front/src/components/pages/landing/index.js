@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const cards = [1, 2, 3, 4];
 
 const LandingPage = ({ user, history }) => {
   const classes = useStyles();
@@ -90,10 +90,10 @@ const LandingPage = ({ user, history }) => {
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      Speak with friends
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the content.
+                      <span role="img" aria-label="emojis countries">🇦🇺 🇧🇷 🇨🇴 🇨🇺 🇪🇸</span>
                     </Typography>
                   </CardContent>
                   <CardActions>

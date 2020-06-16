@@ -47,13 +47,17 @@ const useStyles = makeStyles((theme) => ({
 const Login = ({
   user, history, changeUserUpdate, email,
   password, rememberMe, loginWithEmail, signInWithSocial,
+  created,
 }) => {
   const classes = useStyles();
   useEffect(() => {
     if (user.userUid && firebase.auth().currentUser) {
       history.push(CHATROOM);
     }
-  }, [history, user]);
+    if (created) {
+      history.push(CHATROOM);
+    }
+  }, [history, user, created]);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -159,6 +163,7 @@ const Login = ({
 const mapStateToProps = (state) => ({
   user: state.userState.user,
   email: state.userState.user.email,
+  created: state.userState.user.created,
   password: state.userState.user.password,
   rememberMe: state.userState.user.rememberMe,
 });

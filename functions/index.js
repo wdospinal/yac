@@ -49,7 +49,7 @@ const saveMessage = async (request, response, youtube = '') => {
 exports.user = functions.https.onRequest(async (request, response) => {
   try {
     const {
-      userUid, firstName, lastName, email, image = DEFAULT_IMAGE,
+      userUid, firstName, lastName, email, username, image = DEFAULT_IMAGE,
     } = request.body;
     console.log(request.body);
     response.set('Access-Control-Allow-Origin', '*');
@@ -67,14 +67,14 @@ exports.user = functions.https.onRequest(async (request, response) => {
       if (result.exists) {
         respondWithResult(response, 200)(result.data());
       } else {
-        respondWithError(response, 204)(errorCodes.NO_REGISTER_USER);
+        respondWithError(response, 205)(errorCodes.NO_REGISTER_USER);
       }
     } else if (firstName && lastName && email) {
       const time = new Date().getTime();
       const collecRef = db.collection('users');
       const docRef = collecRef.doc(userUid);
       const result = await docRef.set({
-        userUid, firstName, lastName, email, lastLogin: time, image,
+        userUid, firstName, lastName, email, username, lastLogin: time, image,
       });
       respondWithResult(response, 200)(result);
     } else {

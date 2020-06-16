@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     lastLogin: 1592006913231,
   },
   loading: true,
+  created: false,
 };
 
 const userReducer = (state = INITIAL_STATE, { type, payload, data }) => {
@@ -35,6 +36,12 @@ const userReducer = (state = INITIAL_STATE, { type, payload, data }) => {
       return {
         ...state,
         loading: payload.loading,
+      };
+    }
+    case actions.CREATE_USER_SUCCESS: {
+      return {
+        ...state,
+        created: true,
       };
     }
     default: return state;
