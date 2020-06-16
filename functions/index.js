@@ -70,9 +70,7 @@ exports.user = functions.https.onRequest(async (request, response) => {
       const collecRef = db.collection('users');
       const docRef = collecRef.doc(userUid);
       const result = await docRef.get();
-      console.log(result.data());
       if (result.exists) {
-        console.log('entra');
         respondWithResult(response, 200)(result.data());
       } else {
         respondWithError(response, 204)(errorCodes.NO_REGISTER_USER);
@@ -117,7 +115,6 @@ exports.message = functions.https.onRequest(async (request, response) => {
         index += 1;
         video = results[index];
       }
-      console.log(video);
       saveMessage(request, response, video.id);
     });
   } else {

@@ -13,7 +13,6 @@ function respondWithResult(res, code) {
 function respondWithError(res, statusCode) {
   const resCode = statusCode || 500;
   return (message) => {
-    console.log(message);
     const errorMessage = message || errorCodes.FIREBASE;
     res.status(resCode).json({ message: errorMessage, resCode });
   };
