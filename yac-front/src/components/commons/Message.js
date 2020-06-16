@@ -40,8 +40,9 @@ const styles = {
 
 const Message = ({
   message: {
-    body, time, username, fromYou, youtube,
+    body, time, username, fromYou, youtube, bulkMessage,
   },
+  doScrollDown,
 }) => (
   <div>
     {!fromYou
@@ -51,10 +52,17 @@ const Message = ({
             <MessageImage username={username} />
             <p className="text">{body}</p>
           </div>
-          {youtube && <Youtube videoId={youtube} opts={{ width: 400, height: 250 }} /> }
+          {youtube
+          && (
+          <Youtube
+            onReady={doScrollDown}
+            videoId={youtube}
+            opts={{ width: 400, height: 250 }}
+          />
+          ) }
           <div style={styles.row}>
             <div style={styles.userName}>{generateUsername(USERNAME_CHAR_LIMIT, username)}</div>
-            <p className="time">{formatTime(time)}</p>
+            {!bulkMessage && <p className="time">{formatTime(time)}</p>}
           </div>
         </div>
       )
@@ -65,8 +73,15 @@ const Message = ({
               <p className="text">{body}</p>
             </div>
           </div>
-          {youtube && <Youtube videoId={youtube} opts={{ width: 400, height: 250 }} /> }
-          <p className="time-self">{formatTime(time)}</p>
+          {youtube
+          && (
+          <Youtube
+            onReady={doScrollDown}
+            videoId={youtube}
+            opts={{ width: 400, height: 250 }}
+          />
+          ) }
+          {!bulkMessage && <p className="time-self">{formatTime(time)}</p>}
         </div>
       )}
   </div>

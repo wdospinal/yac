@@ -247,16 +247,16 @@ body {
 }
 
 .time {
-  font-size: 10px;
-  color:lightgrey;
+  font-size: 15px;
+  color:grey;
   margin-bottom:10px;
   margin-left: 85px;
 }
 .time-self {
   display: flex;
   direction: rtl;
-  font-size: 10px;
-  color:lightgrey;
+  font-size: 15px;
+  color:grey;
   margin-bottom:10px;
   margin-left: 85px;
 }

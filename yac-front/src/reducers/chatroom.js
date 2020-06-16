@@ -1,34 +1,16 @@
 import * as actions from '../constants/actions';
+import { messageIsNotDuplicate, setMessageProps } from '../utils';
 
 const INITIAL_STATE = {
   messages: [],
   currentMessage: '',
   error: '',
   isFetching: false,
-  scrollDown: false,
-  userUid: '01', // TODO: delete when login
-  reciever: 'general',
+  currentUserUid: '',
   openChannel: 'general',
 };
 
 // TODO: Remove this fuctions to utils
-const filterMsg = (msg, msgId) => msg.filter((item) => item.messageId === msgId);
-const messageIsNotDuplicate = (msg, msgId) => filterMsg(msg, msgId).length <= 0;
-
-const setMessageProps = ({ payload, data }) => {
-  const { userUid } = payload;
-  const { userUid: currentUserId } = data;
-  const fromYou = userUid === currentUserId;
-  return {
-    body: payload.body,
-    messageId: payload.messageId,
-    time: payload.time,
-    username: payload.username,
-    youtube: payload.youtube,
-    userUid,
-    fromYou,
-  };
-};
 
 const chatroomReducer = (state = INITIAL_STATE, { type, payload, data }) => {
   switch (type) {
@@ -40,21 +22,28 @@ const chatroomReducer = (state = INITIAL_STATE, { type, payload, data }) => {
           setMessageProps({
             payload,
             data,
+            currentUserUid: state.currentUserUid,
+            lastMesage: tempMessages[tempMessages.length - 1],
           }),
         );
+        const { length } = tempMessages;
+        if (length > 2 && tempMessages[length - 2].userUid === tempMessages[length - 1].userUid) {
+          tempMessages[length - 2].bulkMessage = true;
+        }
       }
       tempState.messages = tempMessages;
       return tempState;
+    }
+    case actions.CURRENT_USER: {
+      return {
+        ...state,
+        currentUserUid: data.userUid,
+      };
     }
     case actions.SAVE_MESSAGE:
       return {
         ...state,
         currentMessage: payload.message,
-      };
-    case actions.SCROLL_DOWN:
-      return {
-        ...state,
-        scrollDown: payload,
       };
     default:
       return state;

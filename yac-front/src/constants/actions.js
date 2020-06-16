@@ -25,6 +25,7 @@ export const SET_LOADING = 'SET_LOADING';
 export const GET_USER = 'GET_USER';
 export const SIGN_IN_WITH_SOCIAL = 'SIGN_IN_WITH_SOCIAL';
 export const FETCH_USER = 'FETCH_USER';
+export const CURRENT_USER = 'CURRENT_USER';
 export const USER_UPDATE = 'USER_UPDATE';
 
 // LANDING
@@ -36,7 +37,6 @@ export const POST_MESSAGE = 'POST_MESSAGE';
 export const POST_MESSAGE_SUCCEEDED = 'POST_MESSAGE_SUCCEEDED';
 export const POST_MESSAGE_FAILED = 'POST_MESSAGE_FAILED';
 export const SAVE_MESSAGE = 'SAVE_MESSAGE';
-export const SCROLL_DOWN = 'SCROLL_DOWN';
 
 export const UPDATE_CHAT_SUCCESS = 'UPDATE_CHAT_SUCCESS';
 export const UPDATE_CHAT = 'UPDATE_CHAT';

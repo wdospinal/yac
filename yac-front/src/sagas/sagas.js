@@ -12,8 +12,8 @@ function* fetchUser(action) {
       ...action.data,
     };
     const { data } = yield Axios.post(`${URL}${USER}`, params);
-    console.log(data);
     yield put({ type: actions.USER_FETCH_SUCCEEDED, data });
+    yield put({ type: actions.CURRENT_USER, data });
   } catch (e) {
     console.log(e);
     yield put({ type: actions.USER_FETCH_FAILED, message: e.message });
@@ -50,7 +50,6 @@ export function* createUserWithEmailAndPassword({
   try {
     if (email && password) {
       const response = yield firebase.auth().createUserWithEmailAndPassword(email, password);
-      console.log(response);
       const userUid = response.user.uid;
       yield put({
         type: actions.CREATE_USER_DB,
@@ -106,13 +105,11 @@ export function* signOut() {
 
 export function* signInWithSocial({ data: { provider } }) {
   console.log('signInWithSocial');
-  console.log(provider);
   try {
     if (provider) {
       let authProvider;
       switch (provider) {
         case 'GOOGLE':
-          console.log('entra');
           authProvider = new firebase.auth.GoogleAuthProvider();
           break;
         case 'FACEBOOK':
@@ -142,20 +139,13 @@ export function* signInWithSocial({ data: { provider } }) {
 
 export function* updateChatState({ data: { meesageId, snapshot, userUid } }) {
   console.log('updateChatState');
+  console.log(userUid);
   try {
     if (snapshot) {
       yield put({
         type: actions.UPDATE_CHAT_SUCCESS,
         data: { userUid, meesageId },
         payload: snapshot,
-      });
-      yield put({
-        type: actions.SCROLL_DOWN,
-        payload: true,
-      });
-      yield put({
-        type: actions.SCROLL_DOWN,
-        payload: false,
       });
     }
   } catch (e) {
@@ -169,7 +159,6 @@ export function* postMessage({
   },
 }) {
   console.log('postMessage');
-  console.log(username);
   try {
     const body = {
       username,

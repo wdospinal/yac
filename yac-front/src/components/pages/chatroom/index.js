@@ -14,7 +14,7 @@ import { LOGIN } from '../../../constants/routes';
 function Chatroom({
   error, isFetching, messages, currentMessage,
   loader, sendIcon, postMessage, saveMessage,
-  openChannel, userUid, username, scrollDown,
+  openChannel, userUid, username,
   signOut, history, user, updateChatState,
 }) {
   useEffect(() => {
@@ -33,8 +33,7 @@ function Chatroom({
               snapshot: change.doc.data(),
               userUid,
             });
-            const objDiv = document.getElementById('listChat');
-            objDiv.scrollTop = objDiv.scrollHeight;
+            doScrollDown();
           }
           if (change.type === 'modified') {
             console.log('Modified messages: ', change.doc.data());
@@ -44,7 +43,7 @@ function Chatroom({
           }
         });
       });
-  }, []);
+  }, [userUid]);
   function updateStateOnChange(e) {
     if (!e.target.value || e.target.value.trim()) {
       saveMessage(e.target.value);
@@ -59,18 +58,20 @@ function Chatroom({
 
   function sendMessage() {
     if (currentMessage) {
-      console.log(user);
-      console.log(currentMessage, openChannel, userUid, username);
       postMessage({
         currentMessage, openChannel, userUid, username,
       });
       saveMessage('');
     }
   }
-  if (scrollDown) {
+
+  function doScrollDown() {
     const objDiv = document.getElementById('listChat');
-    objDiv.scrollTop = objDiv.scrollHeight;
+    if (objDiv) {
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
   }
+
   return (
     <div id="page-top">
       <Navigation title="Chatroom" signOut={signOut} user={user} />
@@ -95,7 +96,7 @@ function Chatroom({
                 name="listName"
                 id="listChatMessages"
               >
-                <Chat messages={messages} />
+                <Chat messages={messages} doScrollDown={doScrollDown} />
               </List>
             </Paper>
             <ChatInput
@@ -118,7 +119,6 @@ const mapStateToProps = (state) => ({
   messages: state.chatroomState.messages,
   currentMessage: state.chatroomState.currentMessage,
   openChannel: state.chatroomState.openChannel,
-  scrollDown: state.chatroomState.scrollDown,
   user: state.userState.user,
   userUid: state.userState.user.userUid,
   username: state.userState.user.username,
