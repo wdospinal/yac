@@ -18,7 +18,6 @@ function Chatroom({
   signOut, history, user, updateChatState,
 }) {
   useEffect(() => {
-    console.log(user, !user);
     if (!user.email && !firebase.auth().currentUser) {
       history.push(LOGIN);
     }

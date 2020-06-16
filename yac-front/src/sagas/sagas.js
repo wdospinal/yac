@@ -19,14 +19,43 @@ function* fetchUser(action) {
   }
 }
 
-export function* createUserWithEmailAndPassword({ data: { email, password } }) {
+function* createUserDB({
+  data: {
+    userUid, email, firstName, lastName, image,
+  },
+}) {
+  console.log('createUserDB');
+  try {
+    const body = {
+      userUid, firstName, lastName, email, image,
+    };
+    const response = yield Axios.post(`${URL}${USER}`, body);
+    yield put({
+      type: actions.CREATE_USER_SUCCESS,
+      payload: response,
+    });
+  } catch (e) {
+    console.log(e);
+    yield put({ type: actions.CREATE_USER_FAILED, message: e.message });
+  }
+}
+
+export function* createUserWithEmailAndPassword({
+  data: {
+    email, password, firstName, lastName, image,
+  },
+}) {
   console.log('createUserWithEmailAndPassword');
   try {
     if (email && password) {
       const response = yield firebase.auth().createUserWithEmailAndPassword(email, password);
+      console.log(response);
+      const userUid = response.user.uid;
       yield put({
-        type: actions.CREATE_USER_SUCCESS,
-        payload: response,
+        type: actions.CREATE_USER_DB,
+        data: {
+          email, password, firstName, lastName, image, userUid,
+        },
       });
     }
   } catch (e) {
@@ -178,6 +207,9 @@ function* watchUpdateChatState() {
 function* watchPostMessage() {
   yield takeEvery(actions.POST_MESSAGE, postMessage);
 }
+function* watchCreateUserDB() {
+  yield takeEvery(actions.CREATE_USER_DB, createUserDB);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -188,5 +220,6 @@ export default function* rootSaga() {
     watchFetchUser(),
     watchUpdateChatState(),
     watchPostMessage(),
+    watchCreateUserDB(),
   ]);
 }

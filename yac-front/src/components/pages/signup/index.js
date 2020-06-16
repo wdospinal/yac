@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   Avatar, Button, CssBaseline, TextField,
@@ -8,7 +8,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { LockOutlined } from '@material-ui/icons';
 import { USER_UPDATE, CREATE_USER_WITH_EMAIL_AND_PASSWORD } from '../../../constants/actions';
-import { LOGIN } from '../../../constants/routes';
+import { LOGIN, CHATROOM } from '../../../constants/routes';
+import firebase from '../../../store/firebase';
 
 function Copyright() {
   return (
@@ -47,8 +48,14 @@ const useStyles = makeStyles((theme) => ({
 function SignUp({
   changeUserUpdate, firstName, lastName,
   email, password, terms, createUser,
+  image, history, user,
 }) {
   const classes = useStyles();
+  useEffect(() => {
+    if (user.userUid === firebase.auth().uid) {
+      history.push(CHATROOM);
+    }
+  }, [history, user]);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -130,7 +137,7 @@ function SignUp({
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => createUser(email, password)}
+            onClick={() => createUser(email, password, firstName, lastName, image)}
           >
             Sign Up
           </Button>
@@ -157,13 +164,18 @@ const mapStateToProps = (state) => ({
   email: state.userState.user.email,
   password: state.userState.user.password,
   lastLogin: state.userState.user.lastLogin,
-  image: state.userState.user.image, // TODO: Load image
+  image: state.userState.user.image, // TODO: Load image from  stock
 });
 
 const mapDispatchToProps = (dispatch) => ({
   changeUserUpdate: (type, value) => dispatch({ type: USER_UPDATE, payload: { type, value } }),
-  createUser: (email, password) => dispatch(
-    { type: CREATE_USER_WITH_EMAIL_AND_PASSWORD, data: { email, password } },
+  createUser: (email, password, firstName, lastName, image) => dispatch(
+    {
+      type: CREATE_USER_WITH_EMAIL_AND_PASSWORD,
+      data: {
+        email, password, firstName, lastName, image,
+      },
+    },
   ),
 });
 

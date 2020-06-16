@@ -63,7 +63,7 @@ function Login({
 }) {
   const classes = useStyles();
   useEffect(() => {
-    if (user.email && firebase.auth().currentUser) {
+    if (user.userUid && firebase.auth().currentUser) {
       history.push(CHATROOM);
     }
   }, [history, user]);

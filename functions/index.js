@@ -51,11 +51,12 @@ const saveMessage = async (request, response, youtube = '') => {
     respondWithError(response, 200)(errorCodes.FIREBASE);
   }
 };
+const DEFAULT_IMAGE = 'http://www.boutique-uns.com/uns/185-home_01grid/polo-femme.jpg';
 
 exports.user = functions.https.onRequest(async (request, response) => {
   try {
     const {
-      userUid,
+      userUid, firstName, lastName, email, image = DEFAULT_IMAGE,
     } = request.body;
     console.log(request.body);
     response.set('Access-Control-Allow-Origin', '*');
@@ -66,7 +67,7 @@ exports.user = functions.https.onRequest(async (request, response) => {
       response.set('Access-Control-Allow-Headers', 'Content-Type');
       response.set('Access-Control-Max-Age', '3600');
       response.sendStatus(204);
-    } else if (userUid) {
+    } else if (userUid && !email) {
       const collecRef = db.collection('users');
       const docRef = collecRef.doc(userUid);
       const result = await docRef.get();
@@ -75,6 +76,14 @@ exports.user = functions.https.onRequest(async (request, response) => {
       } else {
         respondWithError(response, 204)(errorCodes.NO_REGISTER_USER);
       }
+    } else if (firstName && lastName && email) {
+      const time = new Date().getTime();
+      const collecRef = db.collection('users');
+      const docRef = collecRef.doc(userUid);
+      const result = await docRef.set({
+        userUid, firstName, lastName, email, lastLogin: time, image,
+      });
+      respondWithResult(response, 200)(result);
     } else {
       respondWithError(response, 200)(errorCodes.INVALID_REQUEST);
     }
