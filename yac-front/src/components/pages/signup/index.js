@@ -10,14 +10,7 @@ import { LockOutlined } from '@material-ui/icons';
 import { USER_UPDATE, CREATE_USER_WITH_EMAIL_AND_PASSWORD } from '../../../constants/actions';
 import { LOGIN, CHATROOM } from '../../../constants/routes';
 import firebase from '../../../store/firebase';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {`Copyright © YAC ${new Date().getFullYear()} .`}
-    </Typography>
-  );
-}
+import { Copyright } from '../../commons';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignUp({
+const SignUp = ({
   changeUserUpdate, firstName, lastName,
   email, password, terms, createUser,
   image, history, user, username,
-}) {
+}) => {
   const classes = useStyles();
   useEffect(() => {
     if (user.userUid && firebase.auth().currentUser) {
@@ -162,7 +155,7 @@ function SignUp({
       </Box>
     </Container>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   user: state.userState,

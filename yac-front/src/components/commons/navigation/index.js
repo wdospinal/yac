@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navigation({ title, user, signOut }) {
+const Navigation = ({ title, user, signOut }) => {
   const classes = useStyles();
 
   return (
@@ -42,4 +42,6 @@ export default function Navigation({ title, user, signOut }) {
       </AppBar>
     </div>
   );
-}
+};
+
+export default Navigation;

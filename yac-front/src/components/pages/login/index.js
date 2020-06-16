@@ -11,14 +11,7 @@ import {
 } from '../../../constants/actions';
 import { SINGNUP, CHATROOM } from '../../../constants/routes';
 import firebase from '../../../store/firebase';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {`Copyright © YAC ${new Date().getFullYear()} .`}
-    </Typography>
-  );
-}
+import { Copyright } from '../../commons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,10 +44,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login({
+const Login = ({
   user, history, changeUserUpdate, email,
   password, rememberMe, loginWithEmail, signInWithSocial,
-}) {
+}) => {
   const classes = useStyles();
   useEffect(() => {
     if (user.userUid && firebase.auth().currentUser) {
@@ -161,7 +154,7 @@ function Login({
       </Grid>
     </Grid>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   user: state.userState.user,

@@ -11,12 +11,12 @@ import {
 } from '../../../constants/actions';
 import { LOGIN } from '../../../constants/routes';
 
-function Chatroom({
+const Chatroom = ({
   error, isFetching, messages, currentMessage,
   loader, sendIcon, postMessage, saveMessage,
   openChannel, userUid, username,
   signOut, history, user, updateChatState,
-}) {
+}) => {
   useEffect(() => {
     if (!user.email && !firebase.auth().currentUser) {
       history.push(LOGIN);
@@ -111,7 +111,7 @@ function Chatroom({
       </div>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   error: state.chatroomState.error,

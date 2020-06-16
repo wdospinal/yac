@@ -139,7 +139,6 @@ export function* signInWithSocial({ data: { provider } }) {
 
 export function* updateChatState({ data: { meesageId, snapshot, userUid } }) {
   console.log('updateChatState');
-  console.log(userUid);
   try {
     if (snapshot) {
       yield put({

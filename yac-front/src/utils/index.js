@@ -10,7 +10,7 @@ export const generateUsername = (USERNAME_CHAR_LIMIT, userName) => {
   return newUsername;
 };
 
-export const setMessageProps = ({ payload, currentUserUid, lastMesage }) => {
+export const setMessageProps = ({ payload, currentUserUid }) => {
   const { userUid } = payload;
   const fromYou = userUid === currentUserUid;
   return {

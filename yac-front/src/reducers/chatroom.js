@@ -10,8 +10,6 @@ const INITIAL_STATE = {
   openChannel: 'general',
 };
 
-// TODO: Remove this fuctions to utils
-
 const chatroomReducer = (state = INITIAL_STATE, { type, payload, data }) => {
   switch (type) {
     case actions.UPDATE_CHAT_SUCCESS: {
