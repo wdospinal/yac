@@ -5,7 +5,7 @@ import {
   FormControlLabel, Checkbox, Link, Paper, Box, Grid, Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { LockOutlined } from '@material-ui/icons';
+import { Comment } from '@material-ui/icons';
 import {
   SIGN_IN_WITH_EMAIL_AND_PASSWORD, USER_UPDATE, SIGN_IN_WITH_SOCIAL,
 } from '../../../constants/actions';
@@ -65,7 +65,7 @@ const Login = ({
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlined />
+            <Comment />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
