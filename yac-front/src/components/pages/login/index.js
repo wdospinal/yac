@@ -7,7 +7,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { LockOutlined } from '@material-ui/icons';
 import {
-  SIGN_IN_WITH_EMAIL_AND_PASSWORD, USER_UPDATE,
+  SIGN_IN_WITH_EMAIL_AND_PASSWORD, USER_UPDATE, SIGN_IN_WITH_SOCIAL,
 } from '../../../constants/actions';
 import { SINGNUP, CHATROOM } from '../../../constants/routes';
 import firebase from '../../../store/firebase';
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({
   user, history, changeUserUpdate, email,
-  password, rememberMe, loginWithEmail,
+  password, rememberMe, loginWithEmail, signInWithSocial,
 }) {
   const classes = useStyles();
   useEffect(() => {
@@ -123,7 +123,7 @@ function Login({
             >
               Sign In
             </Button>
-            <ListItem button onClick={() => console.log('login google')}>
+            <ListItem button onClick={() => signInWithSocial('GOOGLE')}>
               <ListItemAvatar>
                 <Avatar style={{ backgroundColor: '#eee' }}>
                   <img
@@ -134,6 +134,18 @@ function Login({
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Sign in with Google" />
+            </ListItem>
+            <ListItem button onClick={() => signInWithSocial('FACEBOOK')}>
+              <ListItemAvatar>
+                <Avatar style={{ backgroundColor: '#eee' }}>
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Facebook_icon_2013.svg"
+                    height="30"
+                    alt="G"
+                  />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Continue with Facebook" />
             </ListItem>
             <Grid container>
               <Grid item xs>
@@ -168,6 +180,9 @@ const mapDispatchToProps = (dispatch) => ({
   changeUserUpdate: (type, value) => dispatch({ type: USER_UPDATE, payload: { type, value } }),
   loginWithEmail: (email, password) => dispatch(
     { type: SIGN_IN_WITH_EMAIL_AND_PASSWORD, data: { email, password } },
+  ),
+  signInWithSocial: (provider) => dispatch(
+    { type: SIGN_IN_WITH_SOCIAL, data: { provider } },
   ),
 });
 

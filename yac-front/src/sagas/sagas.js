@@ -74,6 +74,42 @@ export function* signOut() {
   }
 }
 
+export function* signInWithSocial({ data: { provider } }) {
+  console.log('signInWithSocial');
+  console.log(provider);
+  try {
+    if (provider) {
+      let authProvider;
+      switch (provider) {
+        case 'GOOGLE':
+          console.log('entra');
+          authProvider = new firebase.auth.GoogleAuthProvider();
+          break;
+        case 'FACEBOOK':
+          authProvider = new firebase.auth.FacebookAuthProvider();
+          break;
+        case 'GITHUB':
+          authProvider = new firebase.auth.GithubAuthProvider();
+          break;
+        default:
+          break;
+      }
+      const response = yield firebase.auth()
+        .signInWithPopup(authProvider);
+      yield put({
+        type: actions.SIGN_IN_SUCCESS,
+        payload: response,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    yield put({
+      type: actions.SIGN_IN_FAILED,
+      payload: e,
+    });
+  }
+}
+
 export function* updateChatState({ data: { meesageId, snapshot, userId } }) {
   console.log('updateChatState');
   try {
@@ -127,6 +163,9 @@ function* watchCreateUserWithEmailAndPassword() {
 function* watchSignInWithEmailAndPassword() {
   yield takeEvery(actions.SIGN_IN_WITH_EMAIL_AND_PASSWORD, signInWithEmailAndPassword);
 }
+function* watchSignInWithSocial() {
+  yield takeEvery(actions.SIGN_IN_WITH_SOCIAL, signInWithSocial);
+}
 function* watchSignOut() {
   yield takeEvery(actions.SIGN_OUT, signOut);
 }
@@ -144,6 +183,7 @@ export default function* rootSaga() {
   yield all([
     watchCreateUserWithEmailAndPassword(),
     watchSignInWithEmailAndPassword(),
+    watchSignInWithSocial(),
     watchSignOut(),
     watchFetchUser(),
     watchUpdateChatState(),
