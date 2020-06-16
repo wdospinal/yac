@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Element, scroller } from 'react-scroll';
+import { Paper, List } from '@material-ui/core';
 import firebase from '../../../store/firebase';
 import {
   Channels, Chat, Settings, ChatInput, HeaderChat,
@@ -14,7 +14,7 @@ import { LOGIN } from '../../../constants/routes';
 function Chatroom({
   error, isFetching, messages, currentMessage,
   loader, sendIcon, postMessage, saveMessage,
-  openChannel, userId, username, scrollDown,
+  openChannel, userUid, username, scrollDown,
   signOut, history, user, updateChatState,
 }) {
   useEffect(() => {
@@ -24,15 +24,17 @@ function Chatroom({
   }, [history, user]);
   useEffect(() => {
     const dbh = firebase.firestore();
-    dbh.collection(`chats/${openChannel}/messages`)// .where(userId, '!=', userId)
+    dbh.collection(`chats/${openChannel}/messages`)// .where(userUid, '!=', userUid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             updateChatState({
               meesageId: change.doc.id,
               snapshot: change.doc.data(),
-              userId,
+              userUid,
             });
+            const objDiv = document.getElementById('listChat');
+            objDiv.scrollTop = objDiv.scrollHeight;
           }
           if (change.type === 'modified') {
             console.log('Modified messages: ', change.doc.data());
@@ -57,19 +59,17 @@ function Chatroom({
 
   function sendMessage() {
     if (currentMessage) {
+      console.log(user);
+      console.log(currentMessage, openChannel, userUid, username);
       postMessage({
-        currentMessage, openChannel, userId, username,
+        currentMessage, openChannel, userUid, username,
       });
       saveMessage('');
     }
   }
   if (scrollDown) {
-    scroller.scrollTo('finalElement', {
-      duration: 800,
-      delay: 0,
-      smooth: 'easeInOutQuart',
-      containerId: 'containerElement',
-    });
+    const objDiv = document.getElementById('listChat');
+    objDiv.scrollTop = objDiv.scrollHeight;
   }
   return (
     <div id="page-top">
@@ -83,25 +83,21 @@ function Chatroom({
         )}
         <div className="row">
           <Settings />
-          <Channels />
-          <section className="chat">
+          <Channels openChannel={openChannel} lastMessage={messages[messages.length - 1]} />
+          <section className="chat" id="chat">
             <HeaderChat openChannel={openChannel} />
-            <Element
-              name="chat"
-              className="element"
-              id="containerElement"
-              style={{
-                position: 'relative',
-                height: '75%',
-                overflow: 'scroll',
-              }}
+            <Paper
+              elevation={0}
+              id="listChat"
+              style={{ maxHeight: '75%', overflow: 'auto' }}
             >
-              <Chat messages={messages} />
-              <Element
-                name="finalElement"
-                id="finalElement"
-              />
-            </Element>
+              <List
+                name="listName"
+                id="listChatMessages"
+              >
+                <Chat messages={messages} />
+              </List>
+            </Paper>
             <ChatInput
               value={currentMessage}
               changeHandler={updateStateOnChange}
@@ -123,8 +119,8 @@ const mapStateToProps = (state) => ({
   currentMessage: state.chatroomState.currentMessage,
   openChannel: state.chatroomState.openChannel,
   scrollDown: state.chatroomState.scrollDown,
-  userId: state.userState.user.userId,
   user: state.userState.user,
+  userUid: state.userState.user.userUid,
   username: state.userState.user.username,
 });
 

@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   user: {
     email: '',
     password: '',
-    userId: '01',
+    userUid: '01',
     username: 'wdospinal',
     lastLogin: 1592006913231,
   },

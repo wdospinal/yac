@@ -12,6 +12,7 @@ function* fetchUser(action) {
       ...action.data,
     };
     const { data } = yield Axios.post(`${URL}${USER}`, params);
+    console.log(data);
     yield put({ type: actions.USER_FETCH_SUCCEEDED, data });
   } catch (e) {
     console.log(e);
@@ -139,13 +140,13 @@ export function* signInWithSocial({ data: { provider } }) {
   }
 }
 
-export function* updateChatState({ data: { meesageId, snapshot, userId } }) {
+export function* updateChatState({ data: { meesageId, snapshot, userUid } }) {
   console.log('updateChatState');
   try {
     if (snapshot) {
       yield put({
         type: actions.UPDATE_CHAT_SUCCESS,
-        data: { userId, meesageId },
+        data: { userUid, meesageId },
         payload: snapshot,
       });
       yield put({
@@ -164,15 +165,15 @@ export function* updateChatState({ data: { meesageId, snapshot, userId } }) {
 
 export function* postMessage({
   data: {
-    currentMessage, openChannel, userId, username,
+    currentMessage, openChannel, userUid, username,
   },
 }) {
-  console.log('updateChatState');
+  console.log('postMessage');
   console.log(username);
   try {
     const body = {
       username,
-      userId,
+      userUid,
       message: currentMessage,
       channel: openChannel,
     };

@@ -1,6 +1,7 @@
 import React from 'react';
+import { formatTime } from '../../utils';
 
-const Channels = () => (
+const Channels = ({ openChannel, lastMessage }) => (
   <section className="discussions">
     <div className="discussion search">
       <div className="searchbar">
@@ -8,17 +9,20 @@ const Channels = () => (
         <input type="text" placeholder="Search..." />
       </div>
     </div>
-    <div className="discussion message-active">
-      <div className="photo" style={{ backgroundImage: 'url(https://image.noelshack.com/fichiers/2017/38/2/1505775062-1505606859-portrait-1961529-960-720.jpg)' }}>
-        <div className="online" />
-      </div>
-      <div className="desc-contact">
-        <p className="name">Megan Leib</p>
-        <span className="message" role="img" aria-label="emoji">9 pm at the bar if possible 😳</span>
-      </div>
-      <div className="timer">12 sec</div>
+    {lastMessage
+  && (
+  <div className="discussion message-active">
+    <div className="photo" style={{ backgroundImage: `url(${lastMessage.image})` }}>
+      <div className="online" />
     </div>
-
+    <div className="desc-contact">
+      <p className="name">{openChannel}</p>
+      <span className="message" role="img" aria-label="emoji">{lastMessage.body}</span>
+    </div>
+    <div className="timer">{formatTime(lastMessage.time)}</div>
+  </div>
+  )}
+    {/* start discussion */}
     <div className="discussion">
       <div className="photo" style={{ backgroundImage: 'url(http://e0.365dm.com/16/08/16-9/20/theirry-henry-sky-sports-pundit_3766131.jpg?20161212144602)' }}>
         <div className="online" />
@@ -78,6 +82,7 @@ const Channels = () => (
       </div>
       <div className="timer">1 week</div>
     </div>
+    {/* end discussion */}
   </section>
 
 );

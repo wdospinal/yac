@@ -35,7 +35,6 @@ export default function Navigation({ title, user, signOut }) {
             {title}
           </Typography>
           <Button color="inherit" href={CHATROOM}>Chatroom</Button>
-          {console.log(user)}
           {user
             ? <Button color="inherit" onClick={signOut}>Sign out</Button>
             : <Button color="inherit" href={LOGIN}>Log in</Button>}

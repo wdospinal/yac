@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 const search = require('youtube-search');
 const { respondWithResult, respondWithError } = require('./src/helpers/response');
 const { errorCodes } = require('./src/helpers/constants');
+const { formatChannel } = require('./src/utils');
 const serviceAccount = require('./service-account.json');
 
 admin.initializeApp({
@@ -12,16 +13,8 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const formatChannel = (channel, userId) => {
-  if (channel !== 'general') {
-    return userId > channel
-      ? `${channel}-${userId}`
-      : `${userId}-${channel}`;
-  }
-  return channel;
-};
-
 const YOUTUBE_KEY = 'AIzaSyC12_RX8SCxYk5hq2nBafLP2oCjrFu3yks';
+const DEFAULT_IMAGE = 'http://www.boutique-uns.com/uns/185-home_01grid/polo-femme.jpg';
 const config = {
   maxResults: 2,
   key: YOUTUBE_KEY,
@@ -30,20 +23,21 @@ const config = {
 const saveMessage = async (request, response, youtube = '') => {
   try {
     const {
-      message, channel, username, userId,
+      message, channel, username, userUid, image = DEFAULT_IMAGE,
     } = request.body;
-    const newChannel = formatChannel(channel, userId);
+    const newChannel = formatChannel(channel, userUid);
     const time = new Date().getTime();
-    const messageId = `${time}-${username}-${userId}`;
+    const messageId = `${time}-${username}-${userUid}`;
     const collecRef = db.collection(`chats/${newChannel}/messages`);
     const docRef = collecRef.doc(messageId);
     const result = await docRef.set({
       body: message,
       messageId,
       time,
-      userId,
+      userUid,
       username,
       youtube,
+      image,
     });
     respondWithResult(response, 200)(result);
   } catch (error) {
@@ -51,7 +45,6 @@ const saveMessage = async (request, response, youtube = '') => {
     respondWithError(response, 200)(errorCodes.FIREBASE);
   }
 };
-const DEFAULT_IMAGE = 'http://www.boutique-uns.com/uns/185-home_01grid/polo-femme.jpg';
 
 exports.user = functions.https.onRequest(async (request, response) => {
   try {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography, Box } from '@material-ui/core';
 import Lottie from 'react-lottie';
 import animationData from '../../../assets/chat-platform-animation.json';
 
@@ -14,12 +14,18 @@ const defaultOptions = {
 
 const Loading = () => (
   <Grid container component="main" styles={{ height: '100vh' }}>
-    <h1>Lottie</h1>
-    <p>Base animation free from external manipulation</p>
+    <Box mt={5}>
+      <Typography variant="h2" color="textSecondary" align="center">
+        YAC CHAT WITH FRIENDS
+      </Typography>
+      <Typography variant="h4" color="textSecondary" align="center">
+        Simple and secure
+      </Typography>
+    </Box>
     <Lottie
       options={defaultOptions}
-      height={400}
-      width={400}
+      height={500}
+      width={500}
     />
   </Grid>
 );

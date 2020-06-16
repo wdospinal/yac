@@ -18,7 +18,6 @@ const AuthContext = ({
 }) => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         setUser(user.uid);
         setLoading(false);

@@ -15,13 +15,7 @@ import firebase from '../../../store/firebase';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        YAC
-      </Link>
-      {' '}
-      {new Date().getFullYear()}
-      .
+      {`Copyright © YAC ${new Date().getFullYear()} .`}
     </Typography>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Youtube from 'react-youtube';
 import MessageImage from './MessageImage';
+import { generateUsername, formatTime } from '../../utils';
 
 const USERNAME_CHAR_LIMIT = 9;
 const styles = {
@@ -37,14 +38,6 @@ const styles = {
   },
 };
 
-const formatTime = (time) => `${new Date(time).getHours()}h${new Date(time).getMinutes()}`;
-
-const generateUsername = (userName) => {
-  const newUsername = userName.slice(0, USERNAME_CHAR_LIMIT);
-  if (userName.length > USERNAME_CHAR_LIMIT) return newUsername.trim().concat('...');
-  return newUsername;
-};
-
 const Message = ({
   message: {
     body, time, username, fromYou, youtube,
@@ -60,7 +53,7 @@ const Message = ({
           </div>
           {youtube && <Youtube videoId={youtube} opts={{ width: 400, height: 250 }} /> }
           <div style={styles.row}>
-            <div style={styles.userName}>{generateUsername(username)}</div>
+            <div style={styles.userName}>{generateUsername(USERNAME_CHAR_LIMIT, username)}</div>
             <p className="time">{formatTime(time)}</p>
           </div>
         </div>

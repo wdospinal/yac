@@ -14,13 +14,7 @@ import firebase from '../../../store/firebase';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        YAC
-      </Link>
-      {' '}
-      {new Date().getFullYear()}
-      .
+      {`Copyright © YAC ${new Date().getFullYear()} .`}
     </Typography>
   );
 }
@@ -48,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
 function SignUp({
   changeUserUpdate, firstName, lastName,
   email, password, terms, createUser,
-  image, history, user,
+  image, history, user, username,
 }) {
   const classes = useStyles();
   useEffect(() => {
-    if (user.userUid === firebase.auth().uid) {
+    if (user.userUid && firebase.auth().currentUser) {
       history.push(CHATROOM);
     }
   }, [history, user]);
@@ -113,6 +107,19 @@ function SignUp({
                 variant="outlined"
                 required
                 fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => changeUserUpdate('username', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
                 name="password"
                 label="Password"
                 type="password"
@@ -164,6 +171,7 @@ const mapStateToProps = (state) => ({
   email: state.userState.user.email,
   password: state.userState.user.password,
   lastLogin: state.userState.user.lastLogin,
+  username: state.userState.user.username,
   image: state.userState.user.image, // TODO: Load image from  stock
 });
 

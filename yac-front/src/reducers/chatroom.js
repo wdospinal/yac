@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   error: '',
   isFetching: false,
   scrollDown: false,
-  userId: '01', // TODO: delete when login
+  userUid: '01', // TODO: delete when login
   reciever: 'general',
   openChannel: 'general',
 };
@@ -16,16 +16,16 @@ const filterMsg = (msg, msgId) => msg.filter((item) => item.messageId === msgId)
 const messageIsNotDuplicate = (msg, msgId) => filterMsg(msg, msgId).length <= 0;
 
 const setMessageProps = ({ payload, data }) => {
-  const { userId } = payload;
-  const { userId: currentUserId } = data;
-  const fromYou = userId === currentUserId;
+  const { userUid } = payload;
+  const { userUid: currentUserId } = data;
+  const fromYou = userUid === currentUserId;
   return {
     body: payload.body,
     messageId: payload.messageId,
     time: payload.time,
     username: payload.username,
     youtube: payload.youtube,
-    userId,
+    userUid,
     fromYou,
   };
 };
