@@ -52,6 +52,40 @@ const saveMessage = async (request, response, youtube = '') => {
   }
 };
 
+exports.user = functions.https.onRequest(async (request, response) => {
+  try {
+    const {
+      userUid,
+    } = request.body;
+    console.log(request.body);
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Credentials', 'true');
+    console.log(request.method);
+    if (request.method === 'OPTIONS') {
+      response.set('Access-Control-Allow-Methods', 'POST');
+      response.set('Access-Control-Allow-Headers', 'Content-Type');
+      response.set('Access-Control-Max-Age', '3600');
+      response.sendStatus(204);
+    } else if (userUid) {
+      const collecRef = db.collection('users');
+      const docRef = collecRef.doc(userUid);
+      const result = await docRef.get();
+      console.log(result.data());
+      if (result.exists) {
+        console.log('entra');
+        respondWithResult(response, 200)(result.data());
+      } else {
+        respondWithError(response, 204)(errorCodes.NO_REGISTER_USER);
+      }
+    } else {
+      respondWithError(response, 200)(errorCodes.INVALID_REQUEST);
+    }
+  } catch (error) {
+    console.log(error);
+    respondWithError(response, 200)(errorCodes.FIREBASE);
+  }
+});
+
 exports.message = functions.https.onRequest(async (request, response) => {
   const {
     message,

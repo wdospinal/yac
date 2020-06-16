@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navigation({ title }) {
+export default function Navigation({ title, user, signOut }) {
   const classes = useStyles();
 
   return (
@@ -35,7 +35,10 @@ export default function Navigation({ title }) {
             {title}
           </Typography>
           <Button color="inherit" href={CHATROOM}>Chatroom</Button>
-          <Button color="inherit" href={LOGIN}>Login</Button>
+          {console.log(user)}
+          {user
+            ? <Button color="inherit" onClick={signOut}>Sign out</Button>
+            : <Button color="inherit" href={LOGIN}>Log in</Button>}
         </Toolbar>
       </AppBar>
     </div>

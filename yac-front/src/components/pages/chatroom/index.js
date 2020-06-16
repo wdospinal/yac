@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Element, scroller } from 'react-scroll';
 import firebase from '../../../store/firebase';
@@ -7,45 +7,32 @@ import {
 } from '../../commons';
 import Navigation from '../../commons/navigation';
 import {
-  UPDATE_CHAT, POST_MESSAGE, SAVE_MESSAGE,
+  UPDATE_CHAT, POST_MESSAGE, SAVE_MESSAGE, SIGN_OUT,
 } from '../../../constants/actions';
+import { LOGIN } from '../../../constants/routes';
 
-class Chatroom extends Component {
-  constructor(props) {
-    super(props);
-    this.chatStyle = {
-      height: props.height,
-      width: props.width,
-    };
-    this.customStyle = {
-      backgroundColor: props.themeColor,
-      borderColor: `${props.themeColor} ${
-        props.themeColor
-      } transparent transparent`,
-      color: props.textColor,
-    };
-  }
-
-  async componentDidMount() {
-    const {
-      userId, updateChatState, openChannel,
-    } = this.props;
+function Chatroom({
+  error, isFetching, messages, currentMessage,
+  loader, sendIcon, postMessage, saveMessage,
+  openChannel, userId, username, scrollDown,
+  signOut, history, user, updateChatState,
+}) {
+  useEffect(() => {
+    console.log(user, !user);
+    if (!user.email && !firebase.auth().currentUser) {
+      history.push(LOGIN);
+    }
+  }, [history, user]);
+  useEffect(() => {
     const dbh = firebase.firestore();
-    this.listener = dbh.collection(`chats/${openChannel}/messages`)// .where(userId, '!=', userId)
+    dbh.collection(`chats/${openChannel}/messages`)// .where(userId, '!=', userId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            console.log('New messages: ', change.doc.data());
             updateChatState({
               meesageId: change.doc.id,
               snapshot: change.doc.data(),
               userId,
-            });
-            scroller.scrollTo('finalElement', {
-              duration: 800,
-              delay: 0,
-              smooth: 'easeInOutQuart',
-              containerId: 'containerElement',
             });
           }
           if (change.type === 'modified') {
@@ -56,92 +43,78 @@ class Chatroom extends Component {
           }
         });
       });
+  }, []);
+  function updateStateOnChange(e) {
+    if (!e.target.value || e.target.value.trim()) {
+      saveMessage(e.target.value);
+    }
   }
 
-  componentWillUnmount() {
-    // this.listener.off();
+  function handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
   }
 
-  render() {
-    const {
-      error,
-      isFetching,
-      messages,
-      currentMessage,
-      loader,
-      sendIcon,
-      postMessage,
-      saveMessage,
-      openChannel,
-      userId,
-      username,
-    } = this.props;
-
-    function updateStateOnChange(e) {
-      if (!e.target.value || e.target.value.trim()) {
-        saveMessage(e.target.value);
-      }
+  function sendMessage() {
+    if (currentMessage) {
+      postMessage({
+        currentMessage, openChannel, userId, username,
+      });
+      saveMessage('');
     }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    }
-
-    function sendMessage() {
-      console.log(username);
-      if (currentMessage) {
-        postMessage({
-          currentMessage, openChannel, userId, username,
-        });
-        saveMessage('');
-      }
-    }
-
-    return (
-      <div id="page-top">
-        <Navigation title="Chatroom" />
-        <div className="container">
-          {error && <div className="error">Oops! Something went wrong!</div>}
-          {isFetching && (
+  }
+  if (scrollDown) {
+    scroller.scrollTo('finalElement', {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart',
+      containerId: 'containerElement',
+    });
+  }
+  return (
+    <div id="page-top">
+      <Navigation title="Chatroom" signOut={signOut} user={user} />
+      <div className="container">
+        {error && <div className="error">Oops! Something went wrong!</div>}
+        {isFetching && (
           <div className="centered-container">
             <img src={loader} alt="Loading messages" />
           </div>
-          )}
-          <div className="row">
-            <Settings />
-            <Channels />
-            <section className="chat">
-              <HeaderChat openChannel={openChannel} />
+        )}
+        <div className="row">
+          <Settings />
+          <Channels />
+          <section className="chat">
+            <HeaderChat openChannel={openChannel} />
+            <Element
+              name="chat"
+              className="element"
+              id="containerElement"
+              style={{
+                position: 'relative',
+                height: '75%',
+                overflow: 'scroll',
+              }}
+            >
+              <Chat messages={messages} />
               <Element
-                name="chat"
-                className="element"
-                id="containerElement"
-                style={{
-                  position: 'relative',
-                  height: '75%',
-                  overflow: 'scroll',
-                }}
-              >
-                <Chat messages={messages} />
-                <Element
-                  name="finalElement"
-                />
-              </Element>
-              <ChatInput
-                value={currentMessage}
-                changeHandler={updateStateOnChange}
-                clickHandler={sendMessage}
-                enterKeyHandler={handleKeyPress}
-                icon={sendIcon}
+                name="finalElement"
+                id="finalElement"
               />
-            </section>
-          </div>
+            </Element>
+            <ChatInput
+              value={currentMessage}
+              changeHandler={updateStateOnChange}
+              clickHandler={sendMessage}
+              enterKeyHandler={handleKeyPress}
+              icon={sendIcon}
+            />
+          </section>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 const mapStateToProps = (state) => ({
@@ -150,14 +123,17 @@ const mapStateToProps = (state) => ({
   messages: state.chatroomState.messages,
   currentMessage: state.chatroomState.currentMessage,
   openChannel: state.chatroomState.openChannel,
-  userId: state.userState.user.userId, // TODO: login
-  username: state.userState.user.username, // TODO: login
+  scrollDown: state.chatroomState.scrollDown,
+  userId: state.userState.user.userId,
+  user: state.userState.user,
+  username: state.userState.user.username,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateChatState: (data) => dispatch({ type: UPDATE_CHAT, data }),
   saveMessage: (message) => dispatch({ type: SAVE_MESSAGE, payload: { message } }),
   postMessage: (data) => dispatch({ type: POST_MESSAGE, data }),
+  signOut: () => dispatch({ type: SIGN_OUT }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chatroom);

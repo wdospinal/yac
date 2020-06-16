@@ -9,16 +9,13 @@ function respondWithResult(res, code) {
     return res.sendStatus(statusCode);
   };
 }
-const getErrorCode = (code) => {
-  const message = errorCodes[code];
-  return { message, code };
-};
+
 function respondWithError(res, statusCode) {
   const resCode = statusCode || 500;
-  return (code) => {
-    let response = getErrorCode(code);
-    response = response.message ? response : getErrorCode(3);
-    res.status(resCode).json(response);
+  return (message) => {
+    console.log(message);
+    const errorMessage = message || errorCodes.FIREBASE;
+    res.status(resCode).json({ message: errorMessage, resCode });
   };
 }
 

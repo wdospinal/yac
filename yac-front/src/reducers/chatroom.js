@@ -5,11 +5,13 @@ const INITIAL_STATE = {
   currentMessage: '',
   error: '',
   isFetching: false,
+  scrollDown: false,
   userId: '01', // TODO: delete when login
   reciever: 'general',
   openChannel: 'general',
 };
 
+// TODO: Remove this fuctions to utils
 const filterMsg = (msg, msgId) => msg.filter((item) => item.messageId === msgId);
 const messageIsNotDuplicate = (msg, msgId) => filterMsg(msg, msgId).length <= 0;
 
@@ -33,8 +35,6 @@ const chatroomReducer = (state = INITIAL_STATE, { type, payload, data }) => {
     case actions.UPDATE_CHAT_SUCCESS: {
       const tempState = { ...state };
       const tempMessages = Object.assign([], state.messages);
-      console.log(payload);
-      console.log(payload.messageId);
       if (messageIsNotDuplicate(tempMessages, payload.messageId)) {
         tempMessages.push(
           setMessageProps({
@@ -51,7 +51,11 @@ const chatroomReducer = (state = INITIAL_STATE, { type, payload, data }) => {
         ...state,
         currentMessage: payload.message,
       };
-
+    case actions.SCROLL_DOWN:
+      return {
+        ...state,
+        scrollDown: payload,
+      };
     default:
       return state;
   }

@@ -20,7 +20,6 @@ const chats = [
 export default function Chat({ messages = chats }) {
   return (
     <div className="messages-chat">
-      {console.log(messages)}
       {messages && messages.map((message) => (
         <Message key={message.messageId} message={message} />
       ))}
